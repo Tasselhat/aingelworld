@@ -1,10 +1,11 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, useState } from "react";
+import { useRef, useMemo, useState, useCallback } from "react";
 import { Vector3 } from "three";
 import CrystalRings from "./CrystalRings";
 import { Text } from "@react-three/drei";
+import * as THREE from "three";
 
 function ChaosObject() {
   const meshRef = useRef(null);
@@ -13,6 +14,7 @@ function ChaosObject() {
   const [currentText, setCurrentText] = useState("");
   const [textOffset, setTextOffset] = useState({ x: 0, y: 0 });
 
+  // Memoize position to prevent recreation
   const position = useMemo(
     () => new Vector3(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 10 - 5),
     []
@@ -238,7 +240,6 @@ function ChaosObject() {
     "HEART",
     "BRAIN",
     "HELP",
-    "HURT",
     "HEAL",
     "HIDE",
     "SEE",
@@ -280,6 +281,10 @@ function ChaosObject() {
     "SOON",
     "SO",
     "<3",
+    "=)",
+    "ANGER",
+    "RAGE",
+    "HURT",
     "WHY",
     "DO",
     "DOES",
@@ -348,10 +353,39 @@ function ChaosObject() {
     "END",
   ];
 
+  // Memoize update text function to prevent recreation
+  const updateText = useCallback((tokens, textOptions) => {
+    const useToken = Math.random() > 0.8;
+    const newText = useToken
+      ? tokens[Math.floor(Math.random() * tokens.length)]
+      : textOptions[Math.floor(Math.random() * textOptions.length)];
+
+    setCurrentText(newText);
+    setTextOpacity(1);
+  }, []);
+
+  // Memoize geometries array
+  const geometries = useMemo(
+    () => [
+      { type: "boxGeometry", args: [0.5, 0.5, 0.5] },
+      { type: "dodecahedronGeometry", args: [0.4, 0] },
+      { type: "icosahedronGeometry", args: [0.5, 0] },
+      { type: "octahedronGeometry", args: [0.5, 0] },
+      { type: "tetrahedronGeometry", args: [0.5, 0] },
+    ],
+    []
+  );
+
+  const randomGeometry = useMemo(() => {
+    const geom = geometries[Math.floor(Math.random() * geometries.length)];
+    return geom;
+  }, [geometries]);
+
+  // Memoize vector for projection calculations
+  const projectionVector = useMemo(() => new THREE.Vector3(), []);
+
   useFrame((state, delta) => {
-    // Update mesh rotation and position
     if (meshRef.current) {
-      // Rotate the mesh around x and y axes
       const rotationSpeed = {
         x: 0.5,
         y: 0.7,
@@ -359,17 +393,13 @@ function ChaosObject() {
       meshRef.current.rotation.x += delta * rotationSpeed.x;
       meshRef.current.rotation.y += delta * rotationSpeed.y;
 
-      // Make the mesh float up and down in a sine wave pattern
       const floatAmplitude = 2;
       meshRef.current.position.y = Math.sin(state.clock.elapsedTime + position.y) * floatAmplitude;
     }
 
-    // Update floating text
     if (textRef.current) {
-      // Make text always face the camera
       textRef.current.lookAt(state.camera.position);
 
-      // Text update logic - 5 times per second
       const textUpdateInterval = 0.2;
       const timeElapsed = state.clock.elapsedTime;
       const shouldUpdateText =
@@ -377,35 +407,33 @@ function ChaosObject() {
         Math.floor((timeElapsed - delta) / textUpdateInterval);
 
       if (shouldUpdateText) {
-        // 80% chance to show text, 20% chance to show token
-        const useToken = Math.random() > 0.8;
-        const newText = useToken
-          ? tokens[Math.floor(Math.random() * tokens.length)]
-          : textOptions[Math.floor(Math.random() * textOptions.length)];
-
-        setCurrentText(newText);
-        setTextOpacity(1);
+        updateText(tokens, textOptions);
       }
 
-      // Calculate unique scroll direction based on position and time
       const angle = Math.atan2(position.y, position.x) + state.clock.elapsedTime * 0.1;
-      const speed = 0.5; // Reduced speed for more controlled movement
+      const speed = 0.5;
 
       setTextOffset((prev) => {
         const dx = Math.cos(angle) * speed * delta;
         const dy = Math.sin(angle) * speed * delta;
 
-        // Reset position when text moves too far from original position
         const newX = prev.x + dx;
         const newY = prev.y + dy;
 
-        const maxOffset = 3; // Smaller bound to keep text closer to original position
+        const maxOffset = 3;
         const distanceFromOrigin = Math.sqrt(newX * newX + newY * newY);
 
-        if (distanceFromOrigin > maxOffset) {
-          // Reset to a random position closer to the original position
-          const randomAngle = Math.random() * Math.PI * 2;
-          const randomRadius = maxOffset * 0.5; // Start halfway to the max distance
+        projectionVector.set(newX, newY, 0);
+        projectionVector.project(state.camera);
+
+        const isOffscreen =
+          Math.abs(projectionVector.x) > 1 ||
+          Math.abs(projectionVector.y) > 1 ||
+          distanceFromOrigin > maxOffset;
+
+        if (isOffscreen) {
+          const randomAngle = Math.atan2(-prev.y, -prev.x) + (Math.random() - 0.5);
+          const randomRadius = maxOffset * 0.5;
           return {
             x: Math.cos(randomAngle) * randomRadius,
             y: Math.sin(randomAngle) * randomRadius,
@@ -419,10 +447,14 @@ function ChaosObject() {
   return (
     <group position={position}>
       <mesh ref={meshRef}>
-        <icosahedronGeometry args={[0.5, 0]} />
+        <primitive
+          object={
+            new THREE[randomGeometry.type.charAt(0).toUpperCase() + randomGeometry.type.slice(1)]()
+          }
+          {...randomGeometry.args}
+        />
         <meshStandardMaterial color="#00ffff" wireframe opacity={0.5} transparent />
       </mesh>
-      {/* Main text */}
       <Text
         ref={textRef}
         position={[textOffset.x, textOffset.y, 0]}
@@ -438,12 +470,12 @@ function ChaosObject() {
   );
 }
 
-export default function Background3D() {
-  const objects = useMemo(() => Array.from({ length: 55 }, (_, i) => <ChaosObject key={i} />), []);
+const Background3D = () => {
+  const objects = useMemo(() => Array.from({ length: 40 }, (_, i) => <ChaosObject key={i} />), []);
 
   return (
     <div className="fixed inset-0 z-10">
-      <Canvas camera={{ position: [0, 0, 5] }}>
+      <Canvas camera={{ position: [0, 0, 9] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={0.5} />
         {objects}
@@ -451,4 +483,6 @@ export default function Background3D() {
       </Canvas>
     </div>
   );
-}
+};
+
+export default Background3D;

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useMemo, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, Environment } from "@react-three/drei";
 import * as THREE from "three";
@@ -8,23 +8,35 @@ import * as THREE from "three";
 const Crystal = ({ position = [0, 0, 0] }) => {
   const crystalRef = useRef();
 
-  // Create crystal geometry - top cone with matching segments
-  const geometry = new THREE.CylinderGeometry(0, 1, 1.4, 6, 1);
-  // Create bottom cylinder geometry with matching segments
-  const bottomGeometry = new THREE.CylinderGeometry(1, 1, 2, 6);
-  const geometry2 = new THREE.CylinderGeometry(1, 0, 1.4, 6, 1);
+  // Create geometries once outside render cycle
+  const geometry = useMemo(() => new THREE.CylinderGeometry(0, 0.7, 0.98, 6, 1), []);
+  const bottomGeometry = useMemo(() => new THREE.CylinderGeometry(0.7, 0.7, 1.4, 6), []);
+  const geometry2 = useMemo(() => new THREE.CylinderGeometry(0.7, 0, 0.98, 6, 1), []);
 
-  // Create material with crystal-like properties
-  const material = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff,
-    metalness: 0.2,
-    roughness: 0.1,
-    transmission: 0.9,
-    thickness: 0.5,
-    envMapIntensity: 1,
-  });
+  // Create material once outside render cycle
+  const material = useMemo(
+    () =>
+      new THREE.MeshPhysicalMaterial({
+        color: 0xffffff,
+        metalness: 0.2,
+        roughness: 0.1,
+        transmission: 0.9,
+        thickness: 0.5,
+        envMapIntensity: 1,
+      }),
+    []
+  );
 
-  // Rotate crystal clockwise
+  // Cleanup geometries and materials on unmount
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      bottomGeometry.dispose();
+      geometry2.dispose();
+      material.dispose();
+    };
+  }, []);
+
   useFrame((state, delta) => {
     if (crystalRef.current) {
       crystalRef.current.rotation.y += delta * 0.5;
@@ -33,9 +45,9 @@ const Crystal = ({ position = [0, 0, 0] }) => {
 
   return (
     <group ref={crystalRef} position={position}>
-      <mesh geometry={geometry} material={material} position={[0, 0.25, 0]}>
+      <mesh geometry={geometry} material={material} position={[0, 0.675, 0]}>
         <meshPhysicalMaterial
-          color={0xffffff}
+          color={0x444444}
           metalness={0.2}
           roughness={0.1}
           transmission={0.9}
@@ -43,9 +55,9 @@ const Crystal = ({ position = [0, 0, 0] }) => {
           envMapIntensity={1}
         />
       </mesh>
-      <mesh geometry={bottomGeometry} material={material} position={[0, -1.45, 0]}>
+      <mesh geometry={bottomGeometry} material={material} position={[0, -0.515, 0]}>
         <meshPhysicalMaterial
-          color={0xffffff}
+          color={0x444444}
           metalness={0.2}
           roughness={0.1}
           transmission={0.9}
@@ -53,9 +65,9 @@ const Crystal = ({ position = [0, 0, 0] }) => {
           envMapIntensity={1}
         />
       </mesh>
-      <mesh geometry={geometry2} material={material} position={[0, -3.15, 0]}>
+      <mesh geometry={geometry2} material={material} position={[0, -1.705, 0]}>
         <meshPhysicalMaterial
-          color={0xffffff}
+          color={0x444444}
           metalness={0.2}
           roughness={0.1}
           transmission={0.9}
@@ -70,25 +82,42 @@ const Crystal = ({ position = [0, 0, 0] }) => {
 const Rings = ({ position = [0, 0, 0] }) => {
   const ringsRef = useRef();
 
-  // Create multiple rings with different radii and offsets
-  const rings = [
-    { radius: 1.5, thickness: 0.02, color: 0xffffff, offset: [0.05, 0.02, -0.03] },
-    { radius: 1.8, thickness: 0.015, color: 0xffffff, offset: [-0.03, -0.04, 0.02] },
-    { radius: 2.1, thickness: 0.01, color: 0xffffff, offset: [0.02, 0.03, -0.02] },
-  ];
+  // Create ring geometries and materials once outside render cycle
+  const rings = useMemo(
+    () => [
+      { radius: 1.5, thickness: 0.02, color: 0xffffff, offset: [0.05, 0.02, -0.03] },
+      { radius: 1.8, thickness: 0.015, color: 0xffffff, offset: [-0.03, -0.04, 0.02] },
+      { radius: 2.1, thickness: 0.01, color: 0xffffff, offset: [0.02, 0.03, -0.02] },
+    ],
+    []
+  );
 
-  // Rotate rings around the crystal horizontally
+  const ringGeometries = useMemo(
+    () => rings.map((ring) => new THREE.TorusGeometry(ring.radius, ring.thickness, 16, 100)),
+    [rings]
+  );
+
+  const flatRingGeometry1 = useMemo(() => new THREE.RingGeometry(1.3, 0.8, 6, 1), []);
+  const flatRingGeometry2 = useMemo(() => new THREE.RingGeometry(2.1, 1.4, 20, 24), []);
+
+  // Cleanup geometries on unmount
+  useEffect(() => {
+    return () => {
+      ringGeometries.forEach((geometry) => geometry.dispose());
+      flatRingGeometry1.dispose();
+      flatRingGeometry2.dispose();
+    };
+  }, []);
+
   useFrame((state, delta) => {
     if (ringsRef.current) {
-      ringsRef.current.rotation.z -= delta * 0.3;
+      ringsRef.current.rotation.z += delta * 0.3;
     }
   });
 
   return (
     <group ref={ringsRef} position={position} rotation={[Math.PI / 2, 0, 0]}>
-      {/* Large flat cylinder between rings */}
-      <mesh rotation={[0, 0, 0]}>
-        <ringGeometry args={[1.5, 1, 1, 1]} />
+      <mesh rotation={[0, 0, 0]} geometry={flatRingGeometry1}>
         <meshPhysicalMaterial
           color={0xffffff}
           metalness={0.1}
@@ -98,8 +127,7 @@ const Rings = ({ position = [0, 0, 0] }) => {
         />
       </mesh>
 
-      <mesh position={[0, 0, 0.01]} rotation={[0, 0, 0]}>
-        <ringGeometry args={[2.1, 1.4, 20, 24]} />
+      <mesh position={[0, 0, 0.01]} rotation={[0, 0, 0]} geometry={flatRingGeometry2}>
         <meshPhysicalMaterial
           color={0xaaaaaa}
           metalness={0.1}
@@ -110,8 +138,7 @@ const Rings = ({ position = [0, 0, 0] }) => {
       </mesh>
 
       {rings.map((ring, index) => (
-        <mesh key={index} position={ring.offset}>
-          <torusGeometry args={[ring.radius, ring.thickness, 16, 100]} />
+        <mesh key={index} position={ring.offset} geometry={ringGeometries[index]}>
           <meshPhysicalMaterial
             color={ring.color}
             metalness={0.8}
@@ -128,22 +155,14 @@ const Rings = ({ position = [0, 0, 0] }) => {
 const CrystalRings = () => {
   return (
     <>
-      <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-
-      {/* Lighting */}
-      <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} intensity={1} />
       <pointLight position={[-10, -10, -10]} intensity={0.5} />
 
-      {/* Crystal and Rings */}
-      <group rotation={[Math.PI / 6, 0, Math.PI / 3]}>
-        {" "}
-        {/* Tilt group 30 degrees towards camera */}
+      <group rotation={[Math.PI / 6, 0, Math.PI / 3]} position={[0, 0, 5]}>
         <Crystal position={[0, 0, 0]} />
         <Rings position={[0, 0, 0]} />
       </group>
 
-      {/* Environment map for realistic reflections */}
       <Environment preset="dawn" />
     </>
   );
