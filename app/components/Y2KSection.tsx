@@ -109,7 +109,6 @@ export default function Y2KSection() {
 
     return () => clearInterval(interval);
   }, []);
-
   // Tunnel effect
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -128,7 +127,7 @@ export default function Y2KSection() {
     function animate() {
       if (!ctx || !canvas) return;
 
-      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillStyle = "rgba(11, 11, 11, 0.1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const centerX = canvas.width / 2;
@@ -172,38 +171,44 @@ export default function Y2KSection() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return (
     <motion.section
       ref={sectionRef}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={containerVariants}
-      className="relative min-h-screen flex items-center justify-center bg-gradient-to-r from-cyan-500/30 via-pink-500/30 to-purple-500/30"
+      className="relative h-screen flex items-center justify-center bg-gradient-to-r from-cyan-500/30 via-pink-500/30 to-purple-500/30 overflow-hidden"
     >
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-50" />
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-40" />
       <div ref={containerRef} className="absolute inset-0 overflow-hidden" />
-      <div className="relative text-center space-y-8 p-8">
+      <div className="relative text-center space-y-8 p-8 max-h-screen overflow-y-auto">
         <motion.h2
           variants={titleVariants}
-          className="text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse"
+          className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse"
         >
           DEATH IS NOT THE END
         </motion.h2>
-        <motion.p variants={titleVariants} className="text-2xl font-bold text-white animate-pulse">
+        <motion.p
+          variants={titleVariants}
+          className="text-xl md:text-2xl font-bold text-white animate-pulse"
+        >
           EVERYTHING IS CONNECTED
         </motion.p>
-        <div className="grid grid-cols-2 gap-6 max-w-3xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-3xl mx-auto">
           <motion.div
             ref={card1Ref}
             variants={cardVariants}
             initial="hidden"
             animate={isCard1InView ? "visible" : "hidden"}
             whileHover="hover"
-            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20"
+            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20"
           >
-            <h3 className="text-2xl font-bold mb-3 text-cyan-300">Digital Dreams</h3>
-            <p className="text-white/80">Explore the virtual landscapes of tomorrow</p>
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-cyan-300">
+              Digital Dreams
+            </h3>
+            <p className="text-sm md:text-base text-white/80">
+              Explore the virtual landscapes of tomorrow
+            </p>
           </motion.div>
           <motion.div
             ref={card2Ref}
@@ -211,10 +216,14 @@ export default function Y2KSection() {
             initial="hidden"
             animate={isCard2InView ? "visible" : "hidden"}
             whileHover="hover"
-            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20"
+            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20"
           >
-            <h3 className="text-2xl font-bold mb-3 text-pink-300">Cyber Realms</h3>
-            <p className="text-white/80">Dive into the depths of digital dimensions</p>
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-pink-300">
+              Cyber Realms
+            </h3>
+            <p className="text-sm md:text-base text-white/80">
+              Dive into the depths of digital dimensions
+            </p>
           </motion.div>
           <motion.div
             ref={card3Ref}
@@ -222,10 +231,14 @@ export default function Y2KSection() {
             initial="hidden"
             animate={isCard3InView ? "visible" : "hidden"}
             whileHover="hover"
-            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20"
+            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20"
           >
-            <h3 className="text-2xl font-bold mb-3 text-purple-300">Techno Fusion</h3>
-            <p className="text-white/80">Where humanity and technology intertwine</p>
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-purple-300">
+              Techno Fusion
+            </h3>
+            <p className="text-sm md:text-base text-white/80">
+              Where humanity and technology intertwine
+            </p>
           </motion.div>
           <motion.div
             ref={card4Ref}
@@ -233,10 +246,12 @@ export default function Y2KSection() {
             initial="hidden"
             animate={isCard4InView ? "visible" : "hidden"}
             whileHover="hover"
-            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/20"
+            className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20"
           >
-            <h3 className="text-2xl font-bold mb-3 text-cyan-300">Future Now</h3>
-            <p className="text-white/80">Experience tomorrows technology today</p>
+            <h3 className="text-xl md:text-2xl font-bold mb-2 md:mb-3 text-cyan-300">Future Now</h3>
+            <p className="text-sm md:text-base text-white/80">
+              Experience tomorrows technology today
+            </p>
           </motion.div>
         </div>
       </div>

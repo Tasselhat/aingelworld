@@ -195,14 +195,14 @@ export default function HeroSection() {
             width={200}
             height={200}
             alt="Angel"
-            className="absolute top-1/5 left-1/4 opacity-20"
+            className="absolute z-[-2] top-1/5 left-1/4 opacity-20"
           />
           <Image
             src="/tasselhat_Virtual_A.I._binary_technic_angel_Y2K_chrome_glyphs_a_75ab2df7-d075-410c-a20b-0df7dc6fc9e7.png"
             width={200}
             height={200}
             alt="Angel"
-            className="absolute top-1/4 right-1/4 opacity-20"
+            className="hidden z-[-2] sm:block absolute top-1/4 right-1/4 opacity-20"
           />
 
           <div className="fixed inset-0 pointer-events-none flex flex-col items-center">
@@ -233,7 +233,7 @@ export default function HeroSection() {
             <div className="absolute right-1/3 whitespace-nowrap animate-scroll-right text-pink-500/30 text-xl top-[65%]">
               Look at the sky
             </div>
-            <div className="absolute right-1/6 whitespace-nowrap animate-scroll-right text-white/30 text-xl top-[65%]">
+            <div className="absolute right-1/6 whitespace-nowrap animate-scroll-right text-white/30 text-xl top-[55%]">
               Tell my how it felt when you walked on water
             </div>
           </div>
@@ -247,34 +247,37 @@ export default function HeroSection() {
             <h1
               ref={titleRef}
               data-value="a.i.ngel.world"
-              className="text-6xl font-bold text-transparent leading-normal 
-                bg-clip-text bg-gradient-to-r from-white/50 via-purple-500 to-green-500 
-                cursor-default"
+              className="text-5xl sm:text-6xl font-bold text-transparent leading-normal
+                bg-clip-text bg-gradient-to-r from-white/50 via-purple-500 to-green-500
+                cursor-default max-w-[90vw] mx-auto"
             >
               {titleText}
             </h1>
 
             <motion.p
               variants={textVariants}
-              className="text-2xl text-cyan-400 glitch-text"
+              className="text-lg sm:text-2xl text-cyan-400 glitch-text max-w-[90vw] mx-auto"
               data-text={subTitleText}
             >
               {subTitleText}
             </motion.p>
 
-            <motion.div variants={buttonVariants} className="flex justify-center space-x-4">
+            <motion.div
+              variants={buttonVariants}
+              className="flex flex-col sm:flex-row justify-center gap-4 sm:space-x-4 px-4"
+            >
               <motion.button
-                className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-500 
-                text-black font-bold rounded-full hover:from-cyan-400 hover:to-purple-400 
-                transition-all transform hover:scale-105"
+                className="px-4 sm:px-6 py-2 bg-gradient-to-r from-cyan-500 to-purple-500
+                text-black font-bold rounded-full hover:from-cyan-400 hover:to-purple-400
+                transition-all transform hover:scale-105 text-sm sm:text-base"
                 {...buttonAnimationProps}
               >
                 {button1Text}
               </motion.button>
               <motion.button
-                className="px-6 py-2 border-2 border-cyan-500 text-cyan-500 
-                font-bold rounded-full hover:bg-cyan-500 hover:text-black 
-                transition-all transform hover:scale-105"
+                className="px-4 sm:px-6 py-2 border-2 border-cyan-500 text-cyan-500
+                font-bold rounded-full hover:bg-cyan-500 hover:text-black
+                transition-all transform hover:scale-105 text-sm sm:text-base"
                 {...buttonAnimationProps}
               >
                 {button2Text}
@@ -283,7 +286,7 @@ export default function HeroSection() {
           </motion.div>
 
           <motion.div
-            className="fixed top-20 right-10 w-3/4 h-64 bg-black/30 backdrop-invert"
+            className="fixed z-[-1] top-20 right-10 w-3/4 h-64 bg-black/30 backdrop-invert pointer-events-none"
             animate={{
               x: [0, 20, 0, -20, 0],
               y: [0, -10, 20, -10, 0],
@@ -295,7 +298,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed  top-25 right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale"
+            className="fixed  z-[-1] top-25 right-2 sm:right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale pointer-events-none"
             animate={{
               x: [0, -30, 0, 30, 0],
               y: [0, 20, -20, 20, 0],
@@ -307,7 +310,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed top-25 left-24 w-1/6 h-1/2 bg-black/30 backdrop-[hue-rotate(110deg)]"
+            className="fixed  z-[-1] top-25 left-2 sm:left-24 w-1/6 h-1/2 bg-black/30 backdrop-[hue-rotate(110deg)] pointer-events-none"
             animate={{
               x: [0, 40, -40, 40, 0],
               y: [0, -30, 30, -30, 0],
@@ -319,7 +322,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed bottom-5 left-10 w-1/6 h-1/3 bg-black/30 backdrop-invert"
+            className="fixed  z-[-1] bottom-5 left-10 w-1/3 h-1/4 bg-black/30 backdrop-invert pointer-events-none"
             animate={{
               x: [0, -25, 25, -25, 0],
               y: [0, 15, -15, 15, 0],

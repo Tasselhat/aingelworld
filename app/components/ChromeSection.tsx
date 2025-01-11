@@ -129,7 +129,7 @@ export default function ChromeSection() {
           <div
             className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
             backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
-            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 cursor-pointer"
             onClick={() => {
               document.documentElement.style.filter =
                 document.documentElement.style.filter === "invert(1)" ? "invert(0)" : "invert(1)";
@@ -149,7 +149,7 @@ export default function ChromeSection() {
           <div
             className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
             backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
-            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20 cursor-pointer"
             onClick={() =>
               alert(
                 "Do not fear death, fear never truly living.\nYour death it wont happen to you, it happens to your family and your friends."

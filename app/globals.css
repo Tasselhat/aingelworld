@@ -243,6 +243,15 @@ button {
   }
 }
 
+@keyframes loading {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
 @keyframes matrix-rain {
   0% {
     transform: translateY(-100%);
