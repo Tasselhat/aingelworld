@@ -6,7 +6,7 @@ const orbitron = Orbitron({ subsets: ["latin"], variable: "--font-orbitron" });
 const robotoMono = Roboto_Mono({ subsets: ["latin"], variable: "--font-roboto-mono" });
 
 export const metadata = {
-  title: "a.i.ngel.world",
+  title: "a.i.ngel.cloud",
   description: "Y2K, chrome, techno-angel themed website",
 };
 

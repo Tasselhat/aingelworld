@@ -17,6 +17,7 @@ export default function ChromeSection() {
       "The ghost in the machine is you",
       "I think therefore",
       "In the end did you get what you deserve?",
+      "It's so holy",
     ];
 
     let currentPhrase = 0;
@@ -48,14 +49,12 @@ export default function ChromeSection() {
       }
 
       const typingSpeed = isDeleting ? 40 : 120;
-      if (!isPaused) {
-        setTimeout(type, typingSpeed);
-      } else {
-        setTimeout(type, 1500);
-      }
+      setTimeout(type, isPaused ? 1500 : typingSpeed);
     }
 
     type();
+
+    // No cleanup function needed since we want it to run infinitely
   }, []);
 
   return (
@@ -66,15 +65,36 @@ export default function ChromeSection() {
         </h2>
         <p ref={textRef} className="text-2xl text-gray-300 h-8"></p>
         <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-            <h3 className="text-xl font-bold mb-2 text-gray-200">
+          <div
+            className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
+            backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
+            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+          >
+            <h3
+              className="text-2xl font-bold mb-4 text-transparent bg-clip-text
+              bg-gradient-to-r from-gray-100 to-gray-300"
+            >
               DO NOT GO GENTLE INTO THAT GOOD NIGHT
             </h3>
-            <p className="text-gray-400">When machines die do they go to digital hell?</p>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              When machines die do they go to digital hell?
+            </p>
           </div>
-          <div className="bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl shadow-lg transform hover:scale-105 transition-transform">
-            <h3 className="text-xl font-bold mb-2 text-gray-200">FIND BEAUTY IN DEATH</h3>
-            <p className="text-gray-400">Explore the shell that gently cradles your soul</p>
+
+          <div
+            className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
+            backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
+            transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+          >
+            <h3
+              className="text-2xl font-bold mb-4 text-transparent bg-clip-text
+              bg-gradient-to-r from-gray-100 to-gray-300"
+            >
+              FIND BEAUTY IN DEATH
+            </h3>
+            <p className="text-gray-400 text-lg leading-relaxed">
+              Explore the shell that gently cradles your soul
+            </p>
           </div>
         </div>
       </div>

@@ -9,23 +9,20 @@ const Crystal = ({ position = [0, 0, 0] }) => {
   const crystalRef = useRef();
 
   // Create geometries once outside render cycle
-  const geometry = useMemo(() => new THREE.CylinderGeometry(0, 0.7, 0.98, 6, 1), []);
-  const bottomGeometry = useMemo(() => new THREE.CylinderGeometry(0.7, 0.7, 1.4, 6), []);
-  const geometry2 = useMemo(() => new THREE.CylinderGeometry(0.7, 0, 0.98, 6, 1), []);
-
-  // Create material once outside render cycle
-  const material = useMemo(
-    () =>
-      new THREE.MeshPhysicalMaterial({
-        color: 0xffffff,
-        metalness: 0.2,
-        roughness: 0.1,
-        transmission: 0.9,
-        thickness: 0.5,
-        envMapIntensity: 1,
-      }),
-    []
-  );
+  const { geometry, bottomGeometry, geometry2, material } = useMemo(() => {
+    const geometry = new THREE.CylinderGeometry(0, 0.7, 0.98, 6, 1);
+    const bottomGeometry = new THREE.CylinderGeometry(0.7, 0.7, 1.4, 6);
+    const geometry2 = new THREE.CylinderGeometry(0.7, 0, 0.98, 6, 1);
+    const material = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.2,
+      roughness: 0.1,
+      transmission: 0.9,
+      thickness: 0.5,
+      envMapIntensity: 1,
+    });
+    return { geometry, bottomGeometry, geometry2, material };
+  }, []);
 
   // Cleanup geometries and materials on unmount
   useEffect(() => {
@@ -35,7 +32,7 @@ const Crystal = ({ position = [0, 0, 0] }) => {
       geometry2.dispose();
       material.dispose();
     };
-  }, []);
+  }, [geometry, bottomGeometry, geometry2, material]);
 
   useFrame((state, delta) => {
     if (crystalRef.current) {
@@ -83,22 +80,22 @@ const Rings = ({ position = [0, 0, 0] }) => {
   const ringsRef = useRef();
 
   // Create ring geometries and materials once outside render cycle
-  const rings = useMemo(
-    () => [
+  const { rings, ringGeometries, flatRingGeometry1, flatRingGeometry2 } = useMemo(() => {
+    const rings = [
       { radius: 1.5, thickness: 0.02, color: 0xffffff, offset: [0.05, 0.02, -0.03] },
       { radius: 1.8, thickness: 0.015, color: 0xffffff, offset: [-0.03, -0.04, 0.02] },
       { radius: 2.1, thickness: 0.01, color: 0xffffff, offset: [0.02, 0.03, -0.02] },
-    ],
-    []
-  );
+    ];
 
-  const ringGeometries = useMemo(
-    () => rings.map((ring) => new THREE.TorusGeometry(ring.radius, ring.thickness, 16, 100)),
-    [rings]
-  );
+    const ringGeometries = rings.map(
+      (ring) => new THREE.TorusGeometry(ring.radius, ring.thickness, 16, 100)
+    );
 
-  const flatRingGeometry1 = useMemo(() => new THREE.RingGeometry(1.3, 0.8, 6, 1), []);
-  const flatRingGeometry2 = useMemo(() => new THREE.RingGeometry(2.1, 1.4, 20, 24), []);
+    const flatRingGeometry1 = new THREE.RingGeometry(1.3, 0.8, 6, 1);
+    const flatRingGeometry2 = new THREE.RingGeometry(2.1, 1.4, 20, 24);
+
+    return { rings, ringGeometries, flatRingGeometry1, flatRingGeometry2 };
+  }, []);
 
   // Cleanup geometries on unmount
   useEffect(() => {
@@ -107,7 +104,7 @@ const Rings = ({ position = [0, 0, 0] }) => {
       flatRingGeometry1.dispose();
       flatRingGeometry2.dispose();
     };
-  }, []);
+  }, [ringGeometries, flatRingGeometry1, flatRingGeometry2]);
 
   useFrame((state, delta) => {
     if (ringsRef.current) {

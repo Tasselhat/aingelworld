@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, useState, useCallback } from "react";
+import { useRef, useMemo, useState, useEffect, useCallback } from "react";
 import { Vector3 } from "three";
 import CrystalRings from "./CrystalRings";
 import { Text } from "@react-three/drei";
@@ -68,9 +68,11 @@ function ChaosObject() {
     "REALITY",
     "LEARNING",
     "NEURAL",
+    "SELF",
     "NETWORK",
     "CLOUD",
     "QUANTUM",
+    "SNAKE",
     "DATABASE",
     "ENCRYPTION",
     "NODE",
@@ -352,7 +354,6 @@ function ChaosObject() {
     "MUST",
     "END",
   ];
-
   // Memoize update text function to prevent recreation
   const updateText = useCallback((tokens, textOptions) => {
     const useToken = Math.random() > 0.8;
@@ -383,6 +384,31 @@ function ChaosObject() {
 
   // Memoize vector for projection calculations
   const projectionVector = useMemo(() => new THREE.Vector3(), []);
+
+  // Create and memoize geometry instance
+  const geometry = useMemo(() => {
+    const GeometryClass =
+      THREE[randomGeometry.type.charAt(0).toUpperCase() + randomGeometry.type.slice(1)];
+    return new GeometryClass(...(randomGeometry.args || []));
+  }, [randomGeometry]);
+
+  // Create and memoize material instance
+  const material = useMemo(() => {
+    return new THREE.MeshStandardMaterial({
+      color: "#00ffaa",
+      wireframe: true,
+      opacity: 0.5,
+      transparent: true,
+    });
+  }, []);
+
+  // Cleanup geometries and materials on unmount
+  useEffect(() => {
+    return () => {
+      geometry.dispose();
+      material.dispose();
+    };
+  }, [geometry, material]);
 
   useFrame((state, delta) => {
     if (meshRef.current) {
@@ -446,15 +472,7 @@ function ChaosObject() {
 
   return (
     <group position={position}>
-      <mesh ref={meshRef}>
-        <primitive
-          object={
-            new THREE[randomGeometry.type.charAt(0).toUpperCase() + randomGeometry.type.slice(1)]()
-          }
-          {...randomGeometry.args}
-        />
-        <meshStandardMaterial color="#00ffff" wireframe opacity={0.5} transparent />
-      </mesh>
+      <mesh ref={meshRef} geometry={geometry} material={material} />
       <Text
         ref={textRef}
         position={[textOffset.x, textOffset.y, 0]}
