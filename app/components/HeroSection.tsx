@@ -167,7 +167,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-purple-900/20 to-black/20 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-stone-400/30 via-purple-900/30 to-stone-500/20 overflow-hidden">
       {mounted && (
         <>
           <div className="fixed inset-0 opacity-20 pointer-events-none">
@@ -195,14 +195,14 @@ export default function HeroSection() {
             width={200}
             height={200}
             alt="Angel"
-            className="fixed top-1/4 left-80 opacity-30"
+            className="absolute top-1/5 left-1/4 opacity-20"
           />
           <Image
             src="/tasselhat_Virtual_A.I._binary_technic_angel_Y2K_chrome_glyphs_a_75ab2df7-d075-410c-a20b-0df7dc6fc9e7.png"
             width={200}
             height={200}
             alt="Angel"
-            className="fixed top-1/4 right-1/4 opacity-25"
+            className="absolute top-1/4 right-1/4 opacity-20"
           />
 
           <div className="fixed inset-0 pointer-events-none flex flex-col items-center">
@@ -228,10 +228,13 @@ export default function HeroSection() {
               The ghost in the machine is you
             </div>
             <div className="absolute right-2/3 whitespace-nowrap animate-scroll-left text-orange-500/30 text-xl top-[85%]">
-              Unlock your Virtual Self, tell my how it felt when you walked on water
+              Unlock your Virtual Self
             </div>
             <div className="absolute right-1/3 whitespace-nowrap animate-scroll-right text-pink-500/30 text-xl top-[65%]">
               Look at the sky
+            </div>
+            <div className="absolute right-1/6 whitespace-nowrap animate-scroll-right text-white/30 text-xl top-[65%]">
+              Tell my how it felt when you walked on water
             </div>
           </div>
 
@@ -292,7 +295,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed top-25 right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale"
+            className="fixed  top-25 right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale"
             animate={{
               x: [0, -30, 0, 30, 0],
               y: [0, 20, -20, 20, 0],

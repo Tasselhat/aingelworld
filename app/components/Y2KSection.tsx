@@ -66,6 +66,7 @@ const cardVariants = {
 export default function Y2KSection() {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const card1Ref = useRef<HTMLDivElement>(null);
   const card2Ref = useRef<HTMLDivElement>(null);
   const card3Ref = useRef<HTMLDivElement>(null);
@@ -109,6 +110,69 @@ export default function Y2KSection() {
     return () => clearInterval(interval);
   }, []);
 
+  // Tunnel effect
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let time = 0;
+    const segments = 16;
+    const rings = 15;
+
+    function animate() {
+      if (!ctx || !canvas) return;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      for (let ring = rings; ring > 0; ring--) {
+        const radius = ring * 40 + Math.sin(time + ring * 0.2) * 20;
+        const hue = (time * 50 + ring * 20) % 360;
+
+        ctx.beginPath();
+        for (let segment = 0; segment <= segments; segment++) {
+          const angle = (segment / segments) * Math.PI * 2;
+          const wobble = Math.sin(time * 3 + ring + angle * 2) * 20;
+          const x = centerX + Math.cos(angle + time) * (radius + wobble);
+          const y = centerY + Math.sin(angle + time) * (radius + wobble);
+
+          if (segment === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        }
+        ctx.closePath();
+        ctx.strokeStyle = `hsla(${hue}, 70%, 60%, ${0.5 - ring * 0.03})`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      time += 0.01;
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const handleResize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <motion.section
       ref={sectionRef}
@@ -117,6 +181,7 @@ export default function Y2KSection() {
       variants={containerVariants}
       className="relative min-h-screen flex items-center justify-center bg-gradient-to-r from-cyan-500/30 via-pink-500/30 to-purple-500/30"
     >
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-50" />
       <div ref={containerRef} className="absolute inset-0 overflow-hidden" />
       <div className="relative text-center space-y-8 p-8">
         <motion.h2

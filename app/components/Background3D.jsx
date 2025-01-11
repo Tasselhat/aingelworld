@@ -489,7 +489,7 @@ function ChaosObject() {
 }
 
 const Background3D = () => {
-  const objects = useMemo(() => Array.from({ length: 40 }, (_, i) => <ChaosObject key={i} />), []);
+  const objects = useMemo(() => Array.from({ length: 45 }, (_, i) => <ChaosObject key={i} />), []);
 
   return (
     <div className="fixed inset-0 z-10">

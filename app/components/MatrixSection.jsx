@@ -13,19 +13,26 @@ export default function MatrixSection() {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, margin: "-100px" });
 
-  const [titleText, setTitleText] = useState(
-    Array.from(
-      { length: TITLE_TEXT.length },
-      () => CHARS[Math.floor(Math.random() * CHARS.length)]
-    ).join("")
-  );
+  const [titleText, setTitleText] = useState(TITLE_TEXT);
+  const [subtitleText, setSubtitleText] = useState(SUBTITLE_TEXT);
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  const [subtitleText, setSubtitleText] = useState(
-    Array.from(
-      { length: SUBTITLE_TEXT.length },
-      () => CHARS[Math.floor(Math.random() * CHARS.length)]
-    ).join("")
-  );
+  // Initialize scrambled text on client side only
+  useEffect(() => {
+    setTitleText(
+      Array.from(
+        { length: TITLE_TEXT.length },
+        () => CHARS[Math.floor(Math.random() * CHARS.length)]
+      ).join("")
+    );
+
+    setSubtitleText(
+      Array.from(
+        { length: SUBTITLE_TEXT.length },
+        () => CHARS[Math.floor(Math.random() * CHARS.length)]
+      ).join("")
+    );
+  }, []);
 
   // Matrix rain effect
   useEffect(() => {
@@ -38,7 +45,7 @@ export default function MatrixSection() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const columns = canvas.width / 20;
@@ -54,7 +61,7 @@ export default function MatrixSection() {
       ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "rgba(0, 255, 0, 0.7)";
+      ctx.fillStyle = "rgba(0, 255, 0, 0.8)";
       ctx.font = "15px monospace";
 
       for (let i = 0; i < drops.length; i++) {
@@ -110,11 +117,39 @@ export default function MatrixSection() {
   }, [isInView]);
 
   return (
-    <section
+    <motion.section
       ref={sectionRef}
-      className="relative min-h-screen flex items-center justify-center bg-black/20"
+      className={`relative min-h-screen flex items-center justify-center cursor-pointer ${
+        isExpanded ? "bg-black" : "bg-black/20"
+      }`}
+      animate={{
+        height: isExpanded ? "200vh" : "100vh",
+        transition: {
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+        },
+      }}
+      onClick={() => {
+        setIsExpanded(!isExpanded);
+        // Update canvas height when section expands
+        if (canvasRef.current) {
+          canvasRef.current.height = isExpanded ? window.innerHeight : window.innerHeight * 2;
+        }
+        // Scroll based on expand/contract state
+        window.scrollBy({
+          top: isExpanded ? -window.innerHeight * 0.5 : window.innerHeight * 0.5,
+          behavior: "smooth",
+        });
+      }}
     >
-      <canvas ref={canvasRef} className="absolute inset-0 opacity-90" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 opacity-90"
+        style={{
+          height: isExpanded ? "200vh" : "100vh",
+        }}
+      />
       <motion.div
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : { opacity: 0 }}
@@ -124,6 +159,6 @@ export default function MatrixSection() {
         <h2 className="text-4xl font-bold text-green-400">{titleText}</h2>
         <p className="text-2xl text-green-300">{subtitleText}</p>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

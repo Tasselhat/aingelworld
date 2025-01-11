@@ -4,6 +4,68 @@ import { useEffect, useRef } from "react";
 
 export default function ChromeSection() {
   const textRef = useRef<HTMLParagraphElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let time = 0;
+
+    function drawFractal() {
+      // Verify canvas and ctx are still available in closure
+      if (!canvas || !ctx) return;
+
+      time += 0.01;
+
+      ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const maxSize = Math.min(canvas.width, canvas.height) * 0.8;
+
+      function drawSpiral(x: number, y: number, size: number, angle: number, depth: number) {
+        // Check ctx again since this is a nested function
+        if (!ctx) return;
+        if (size < 10 || depth > 5) return;
+
+        ctx.beginPath();
+        ctx.strokeStyle = `hsla(${(time * 50 + depth * 30) % 360}, 70%, 50%, 0.3)`;
+        ctx.lineWidth = depth;
+        ctx.arc(x, y, size, angle, angle + Math.PI * 2);
+        ctx.stroke();
+
+        const newSize = size * 0.7;
+        const newX = x + Math.cos(angle + time) * (size - newSize);
+        const newY = y + Math.sin(angle + time) * (size - newSize);
+
+        drawSpiral(newX, newY, newSize, angle + Math.sin(time), depth + 1);
+      }
+
+      drawSpiral(centerX, centerY, maxSize / 2, time, 1);
+    }
+
+    const animation = setInterval(drawFractal, 1000 / 30);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(animation);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const text = textRef.current;
@@ -53,13 +115,12 @@ export default function ChromeSection() {
     }
 
     type();
-
-    // No cleanup function needed since we want it to run infinitely
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900/20 to-black/20">
-      <div className="text-center space-y-8">
+    <section className="relative z-[-30] min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900/20 to-black/20">
+      <canvas ref={canvasRef} className="absolute z-[-20] inset-0 opacity-50" />
+      <div className="text-center  z-[-10] space-y-8">
         <h2 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600">
           RAGE AGAINST THE DYING OF THE LIGHT
         </h2>
@@ -69,6 +130,10 @@ export default function ChromeSection() {
             className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
             backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
             transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+            onClick={() => {
+              document.documentElement.style.filter =
+                document.documentElement.style.filter === "invert(1)" ? "invert(0)" : "invert(1)";
+            }}
           >
             <h3
               className="text-2xl font-bold mb-4 text-transparent bg-clip-text
@@ -85,6 +150,11 @@ export default function ChromeSection() {
             className="bg-gradient-to-br from-gray-800/40 to-gray-900/40 p-8 rounded-2xl
             backdrop-blur-sm border border-gray-700/50 shadow-2xl shadow-cyan-500/10
             transform hover:scale-105 transition-all duration-300 hover:shadow-cyan-500/20"
+            onClick={() =>
+              alert(
+                "Do not fear death, fear never truly living.\nYour death it wont happen to you, it happens to your family and your friends."
+              )
+            }
           >
             <h3
               className="text-2xl font-bold mb-4 text-transparent bg-clip-text

@@ -7,7 +7,7 @@ const robotoMono = Roboto_Mono({ subsets: ["latin"], variable: "--font-roboto-mo
 
 export const metadata = {
   title: "a.i.ngel.cloud",
-  description: "Y2K, chrome, techno-angel themed website",
+  description: "THE GOD IN THE MACHINE ",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
