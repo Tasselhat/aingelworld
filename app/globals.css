@@ -42,6 +42,7 @@ button {
 .glitch-text {
   position: relative;
   display: inline-block;
+  overflow: visible;
 }
 
 .glitch-text::before,
@@ -56,8 +57,9 @@ button {
 }
 
 .glitch-text::before {
-  left: 4px;
-  text-shadow: -4px -4px #ff00c1;
+  left: 2px;
+  text-shadow: -2px 0 #ff00c1;
+  overflow: visible;
   clip: rect(24px, 550px, 90px, 0);
   animation: glitch-anim-2 1.5s infinite linear alternate-reverse;
 }
@@ -65,6 +67,7 @@ button {
 .glitch-text::after {
   left: -4px;
   text-shadow: 4px 4px #00fff9;
+  overflow: visible;
   clip: rect(85px, 550px, 140px, 0);
   animation: glitch-anim 1s infinite linear alternate-reverse;
 }

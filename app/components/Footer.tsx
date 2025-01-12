@@ -1,9 +1,14 @@
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-8">
+    <footer className="relative bg-black text-white py-8 z-[-10]">
       <div className="container mx-auto px-4 text-center">
         <p className="text-sm">&copy; 2025 a.i.ngel.world. All rights reserved.</p>
-        <p className="mt-2 text-xs text-cyan-400">Embrace digital chaos, one pixel at a time.</p>
+        <p
+          className="mt-2 text-xs text-cyan-400 glitch-text"
+          data-text="Embrace digital chaos, one pixel at a time."
+        >
+          Embrace digital chaos, one pixel at a time.
+        </p>
         <div className="mt-4 flex justify-center space-x-4">
           <a href="#" className="text-gray-400 hover:text-white transition-colors">
             <span className="sr-only">Twitter</span>

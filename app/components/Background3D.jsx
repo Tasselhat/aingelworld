@@ -129,20 +129,20 @@ function ChaosObject() {
         const newX = prev.x + dx;
         const newY = prev.y + dy;
 
-        const maxOffset = 4;
+        const maxOffset = 5;
         const distanceFromOrigin = Math.sqrt(newX * newX + newY * newY);
 
         projectionVector.set(newX, newY, 0);
         projectionVector.project(state.camera);
 
         const isOffscreen =
-          Math.abs(projectionVector.x) > 1 ||
-          Math.abs(projectionVector.y) > 1 ||
+          Math.abs(projectionVector.x) > 2 ||
+          Math.abs(projectionVector.y) > 2 ||
           distanceFromOrigin > maxOffset;
 
         if (isOffscreen) {
           const randomAngle = Math.atan2(-prev.y, -prev.x) + (Math.random() - 0.5);
-          const randomRadius = maxOffset * 0.5;
+          const randomRadius = maxOffset * 0.4;
           return {
             x: Math.cos(randomAngle) * randomRadius,
             y: Math.sin(randomAngle) * randomRadius,

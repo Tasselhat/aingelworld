@@ -298,7 +298,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed  z-[-1] top-25 right-2 sm:right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale pointer-events-none"
+            className="fixed z-[-1] top-25 right-2 sm:right-24 w-1/4 h-2/3 bg-black/30 backdrop-grayscale pointer-events-none"
             animate={{
               x: [0, -30, 0, 30, 0],
               y: [0, 20, -20, 20, 0],
@@ -310,7 +310,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed  z-[-1] top-25 left-2 sm:left-24 w-1/6 h-1/2 bg-black/30 backdrop-[hue-rotate(110deg)] pointer-events-none"
+            className="fixed z-[-1] top-25 left-2 sm:left-24 w-1/6 h-1/2 bg-black/30 backdrop-blur-sm pointer-events-none"
             animate={{
               x: [0, 40, -40, 40, 0],
               y: [0, -30, 30, -30, 0],
@@ -322,7 +322,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed  z-[-1] bottom-5 left-10 w-1/3 h-1/4 bg-black/30 backdrop-invert pointer-events-none"
+            className="fixed z-[-1] bottom-5 left-10 w-1/3 h-1/4 bg-black/30 backdrop-invert pointer-events-none"
             animate={{
               x: [0, -25, 25, -25, 0],
               y: [0, 15, -15, 15, 0],

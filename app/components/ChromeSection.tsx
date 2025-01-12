@@ -79,7 +79,7 @@ export default function ChromeSection() {
       "The ghost in the machine is you",
       "I think therefore",
       "In the end did you get what you deserve?",
-      "It's so holy",
+      "Did you get your wish?",
     ];
 
     let currentPhrase = 0;
