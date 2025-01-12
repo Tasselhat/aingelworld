@@ -45,7 +45,7 @@ export default function MatrixSection() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const columns = canvas.width / 20;
@@ -120,7 +120,7 @@ export default function MatrixSection() {
     <motion.section
       ref={sectionRef}
       className={`relative min-h-screen flex items-center justify-center cursor-pointer ${
-        isExpanded ? "bg-black" : "bg-black/20"
+        isExpanded ? "bg-black" : "bg-black/40"
       }`}
       animate={{
         height: isExpanded ? "200vh" : "100vh",

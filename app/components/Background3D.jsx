@@ -10,8 +10,8 @@ import { tokens, textOptions } from "../data/text";
 
 function LoadingScreen() {
   return (
-    <Html center className="relative z-20">
-      <div className=" flex flex-col items-center">
+    <Html center className="relative z-20 top-20">
+      <div className="flex flex-col items-center">
         <div className=" w-64 h-2 bg-gray-800 rounded-full overflow-hidden">
           <div
             className="h-full bg-cyan-400 animate-[loading_2s_ease-in-out_infinite]"

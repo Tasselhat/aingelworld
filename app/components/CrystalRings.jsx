@@ -78,24 +78,46 @@ const Crystal = ({ position = [0, 0, 0] }) => {
 
 const Rings = ({ position = [0, 0, 0] }) => {
   const ringsRef = useRef();
+  const pyramidRef = useRef();
+  const cubeRef = useRef();
+  const octahedronRef = useRef();
+  const tetrahedronRef = useRef();
 
   // Create ring geometries and materials once outside render cycle
-  const { rings, ringGeometries, flatRingGeometry1, flatRingGeometry2 } = useMemo(() => {
-    const rings = [
-      { radius: 1.5, thickness: 0.02, color: 0xffffff, offset: [0.05, 0.02, -0.03] },
-      { radius: 1.8, thickness: 0.015, color: 0xffffff, offset: [-0.03, -0.04, 0.02] },
-      { radius: 2.1, thickness: 0.01, color: 0xffffff, offset: [0.02, 0.03, -0.02] },
-    ];
+  const { rings, ringGeometries, flatRingGeometry1, flatRingGeometry2, orbitingGeometries } =
+    useMemo(() => {
+      const rings = [
+        { radius: 1.5, thickness: 0.02, color: 0xffffff, offset: [0.05, 0.02, -0.03] },
+        { radius: 1.8, thickness: 0.015, color: 0xffffff, offset: [-0.03, 0, 0.02] },
+        { radius: 2.1, thickness: 0.01, color: 0xffffff, offset: [0.02, 0.03, -0.02] },
+      ];
 
-    const ringGeometries = rings.map(
-      (ring) => new THREE.TorusGeometry(ring.radius, ring.thickness, 16, 100)
-    );
+      const ringGeometries = rings.map(
+        (ring) => new THREE.TorusGeometry(ring.radius, ring.thickness, 16, 100)
+      );
 
-    const flatRingGeometry1 = new THREE.RingGeometry(1.3, 0.8, 6, 1);
-    const flatRingGeometry2 = new THREE.RingGeometry(2.1, 1.4, 20, 24);
+      const flatRingGeometry1 = new THREE.RingGeometry(1.3, 0.8, 6, 1);
+      const flatRingGeometry2 = new THREE.RingGeometry(2.1, 1.4, 20, 24);
 
-    return { rings, ringGeometries, flatRingGeometry1, flatRingGeometry2 };
-  }, []);
+      // Create orbiting geometries
+      const pyramidGeometry = new THREE.ConeGeometry(0.2, 0.4, 6);
+      const cubeGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+      const octahedronGeometry = new THREE.OctahedronGeometry(0.2);
+      const tetrahedronGeometry = new THREE.TetrahedronGeometry(0.25);
+
+      return {
+        rings,
+        ringGeometries,
+        flatRingGeometry1,
+        flatRingGeometry2,
+        orbitingGeometries: {
+          pyramidGeometry,
+          cubeGeometry,
+          octahedronGeometry,
+          tetrahedronGeometry,
+        },
+      };
+    }, []);
 
   // Cleanup geometries on unmount
   useEffect(() => {
@@ -103,13 +125,34 @@ const Rings = ({ position = [0, 0, 0] }) => {
       ringGeometries.forEach((geometry) => geometry.dispose());
       flatRingGeometry1.dispose();
       flatRingGeometry2.dispose();
+      Object.values(orbitingGeometries).forEach((geometry) => geometry.dispose());
     };
-  }, [ringGeometries, flatRingGeometry1, flatRingGeometry2]);
+  }, [ringGeometries, flatRingGeometry1, flatRingGeometry2, orbitingGeometries]);
 
   useFrame((state, delta) => {
     if (ringsRef.current) {
       ringsRef.current.rotation.z += delta * 0.3;
     }
+
+    const orbitRadius = 2.5;
+    const time = state.clock.getElapsedTime();
+
+    // Update all orbiting objects
+    const orbitingRefs = [
+      { ref: pyramidRef, speed: 0.5, rotationSpeed: 2, phase: 0 },
+      { ref: cubeRef, speed: 0.5, rotationSpeed: 1.5, phase: Math.PI / 2 },
+      { ref: octahedronRef, speed: 0.5, rotationSpeed: 1.8, phase: Math.PI },
+      { ref: tetrahedronRef, speed: 0.5, rotationSpeed: 1.2, phase: (3 * Math.PI) / 2 },
+    ];
+
+    orbitingRefs.forEach(({ ref, speed, rotationSpeed, phase }) => {
+      if (ref.current) {
+        ref.current.rotation.y += delta * rotationSpeed;
+        ref.current.rotation.x += delta * rotationSpeed;
+        ref.current.position.x = Math.cos(time * speed + phase) * orbitRadius;
+        ref.current.position.y = Math.sin(time * speed + phase) * orbitRadius;
+      }
+    });
   });
 
   return (
@@ -145,6 +188,46 @@ const Rings = ({ position = [0, 0, 0] }) => {
           />
         </mesh>
       ))}
+
+      <mesh ref={pyramidRef} geometry={orbitingGeometries.pyramidGeometry}>
+        <meshPhysicalMaterial
+          color={0x88ccff}
+          metalness={0.9}
+          roughness={0.1}
+          transparent={true}
+          opacity={0.8}
+        />
+      </mesh>
+
+      <mesh ref={cubeRef} geometry={orbitingGeometries.cubeGeometry}>
+        <meshPhysicalMaterial
+          color={0xff88cc}
+          metalness={0.9}
+          roughness={0.1}
+          transparent={true}
+          opacity={0.8}
+        />
+      </mesh>
+
+      <mesh ref={octahedronRef} geometry={orbitingGeometries.octahedronGeometry}>
+        <meshPhysicalMaterial
+          color={0xccff88}
+          metalness={0.9}
+          roughness={0.1}
+          transparent={true}
+          opacity={0.8}
+        />
+      </mesh>
+
+      <mesh ref={tetrahedronRef} geometry={orbitingGeometries.tetrahedronGeometry}>
+        <meshPhysicalMaterial
+          color={0xffcc88}
+          metalness={0.9}
+          roughness={0.1}
+          transparent={true}
+          opacity={0.8}
+        />
+      </mesh>
     </group>
   );
 };

@@ -246,7 +246,7 @@ export default function HeroSection() {
           >
             <h1
               ref={titleRef}
-              data-value="a.i.ngel.world"
+              data-value="a.i.ngel.cloud"
               className="text-5xl sm:text-6xl font-bold text-transparent leading-normal
                 bg-clip-text bg-gradient-to-r from-white/50 via-purple-500 to-green-500
                 cursor-default max-w-[90vw] mx-auto"
@@ -310,7 +310,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed z-[-1] top-25 left-2 sm:left-24 w-1/6 h-1/2 bg-black/30 backdrop-blur-sm pointer-events-none"
+            className="fixed z-[-1] top-25 left-2 sm:left-24 w-1/6 h-1/2 bg-black/10 backdrop-blur-[3px] pointer-events-none"
             animate={{
               x: [0, 40, -40, 40, 0],
               y: [0, -30, 30, -30, 0],
@@ -322,7 +322,7 @@ export default function HeroSection() {
             }}
           />
           <motion.div
-            className="fixed z-[-1] bottom-5 left-10 w-1/3 h-1/4 bg-black/30 backdrop-invert pointer-events-none"
+            className="fixed z-[-1] bottom-5 left-10 w-1/3 h-1/4 bg-black/20 backdrop-invert pointer-events-none"
             animate={{
               x: [0, -25, 25, -25, 0],
               y: [0, 15, -15, 15, 0],

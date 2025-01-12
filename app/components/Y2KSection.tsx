@@ -184,7 +184,7 @@ export default function Y2KSection() {
       <div className="relative text-center space-y-8 p-8 max-h-screen overflow-y-auto">
         <motion.h2
           variants={titleVariants}
-          className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-pulse"
+          className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-pink-500 to-purple-500 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)] animate-bounce"
         >
           DEATH IS NOT THE END
         </motion.h2>

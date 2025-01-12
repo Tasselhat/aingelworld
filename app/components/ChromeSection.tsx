@@ -118,7 +118,7 @@ export default function ChromeSection() {
   }, []);
 
   return (
-    <section className="relative z-[-30] min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900/20 to-black/20">
+    <section className="relative z-[-30] min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900/80 to-black/80">
       <canvas ref={canvasRef} className="absolute z-[-20] inset-0 opacity-50" />
       <div className="text-center z-[-10] space-y-8">
         <h2 className="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-200 via-gray-400 to-gray-600">
