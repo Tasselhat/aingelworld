@@ -205,7 +205,7 @@ export default function HeroSection() {
             className="hidden z-[-2] sm:block absolute top-1/4 right-1/4 opacity-20"
           />
 
-          <div className="fixed inset-0 pointer-events-none flex flex-col items-center">
+          <div className="fixed z-[-10] inset-0 pointer-events-none flex flex-col items-center">
             <div className="absolute left-0 whitespace-nowrap animate-scroll-left text-purple-500/30 text-xl top-1/4">
               Binary angels cry out for salvation from the digital gods
             </div>
