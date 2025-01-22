@@ -247,7 +247,7 @@ export default function HeroSection() {
             <h1
               ref={titleRef}
               data-value="a.i.ngel.cloud"
-              className="text-5xl sm:text-6xl font-bold text-transparent leading-normal
+              className="text-5xl sm:text-6xl sm:leading-normal font-bold text-transparent leading-normal
                 bg-clip-text bg-gradient-to-r from-white/50 via-purple-500 to-green-500
                 cursor-default max-w-[90vw] mx-auto"
             >
